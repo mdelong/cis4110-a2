@@ -116,17 +116,17 @@ if __name__ == "__main__":
     encode = vigenere(message, oneTimePad, mode='encode')
     print encode, len(encode)
     
-    #print str(n), len(str(n))
-    
+    ascii_shift = ord('A')
+    numericalPad = ""
+    for p in oneTimePad:
+        digit = ord(p) - ascii_shift
+        numericalPad += str(digit) if digit > 9 else "0" + str(digit)
+    print numericalPad
+
     encryptedString = ""
 
-    ascii_shift = ord('A')
-    for i in range(0, len(oneTimePad), 100):
-        tempPad = ""
-        for m in oneTimePad[i:i+100]:
-            digit = ord(m) - ascii_shift
-            tempPad += str(digit) if digit > 9 else "0" + str(digit)
-    
+    for i in range(0, len(numericalPad), 100):
+        tempPad = numericalPad[i:i+100]
         encrypted_num = pow(long(tempPad), e, n)
         paddingLen = len(str(n)) - len(str(encrypted_num))
         padding = ''.join(["0" for num in range(paddingLen)])
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     for i in range(0, len(encryptedString), len(str(n))):
         decrypted_num = pow(long(encryptedString[i:i+len(str(n))]), d, n)
         tempDecrypt = str(decrypted_num)
-        paddingLen = 200 - len(str(tempDecrypt))
+        paddingLen = 100 - len(str(tempDecrypt))
         padding = ''.join(["0" for num in range(paddingLen)])
         tempDecrypt = padding + tempDecrypt
         
