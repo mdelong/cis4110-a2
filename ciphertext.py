@@ -8,7 +8,6 @@ def gcd (a, b):
 def multiplicative_inverse(a, b):
     """ Find multiplicative inverse of a modulo b (a > b)
         using Extended Euclidean Algorithm """
-    
     origA = a
     X = 0
     prevX = 1
@@ -16,7 +15,6 @@ def multiplicative_inverse(a, b):
     prevY = 0
     
     while b != 0:
-        
         temp = b
         quotient = a/b
         b = a % b
@@ -61,32 +59,28 @@ def generateRSAKeys(p, q):
     # Return a tuple of public and private keys
     return ((n,e), (n,d))
 
-def pendulum(s):
-    """Given abcd yields abcdcbabcdc... """
-    while True:
-        for p in s: yield p
-        for p in reversed(s[1:-1]): yield p
-
 
 def vigenere(text, key, mode='encode'):
-    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ .,\''
-    key = pendulum(key)
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ .,\'*'
     encoded = ''
     
-    for char in text:
+    for i in range(len(text)):
         try:
-            index = alphabet.index(char)
-            offset = alphabet.index(next(key))
-            
-            if mode == 'encode':
-                shifted = index + offset
-            else:
-                shifted = index - offset
-            
-            encoded += alphabet[shifted % len(alphabet)]
+            index = alphabet.index(text[i])
+        except:
+            index = 30
 
-        except ValueError:
-            encoded += '*'
+        try:
+            offset = alphabet.index(key[i % len(key)])
+        except:
+            offset = 30
+            
+        if mode == 'encode':
+            shifted = index + offset
+        else:
+            shifted = index - offset
+            
+        encoded += alphabet[shifted % len(alphabet)]
 
     return encoded
 
@@ -142,15 +136,11 @@ if __name__ == "__main__":
     n, d = privatekey
     oneTimePad = "Do not go gentle into that good night, Old age should burn and rave at close of day; Rage, rage against the dying of the light. Though wise men at their end know dark is right, Because their words had forked no lightning they Do not go gentle into that good night."
     
-    #oneTimePad = (''.join(e for e in oneTimePad if e.isalnum())).upper()
     oneTimePad = oneTimePad[0:200].upper()
     
-    message = "The thousand injuries of Fortunato I had borne as I best could, but when he ventured upon insult I vowed revenge. You, who so well know the nature of my soul, will not suppose, however, that gave utterance to a threat. At length I would be avenged; this was a point definitely, settled --but the very definitiveness with which it was resolved precluded the idea of risk. I must not only punish but punish with impunity. A wrong is unredressed when retribution overtakes its redresser. It is equally unredressed when the avenger fails to make himself felt as such to him who has done the wrong. It must be understood that neither by word nor deed had I given Fortunato cause to doubt my good will. I continued, as was my in to smile in his face, and he did not perceive that my to smile now was at the thought of his immolation. He had a weak point --this Fortunato --although in other regards he was a man to be respected and even feared. He prided himself on his connoisseurship in wine. askjksdjfkjskfsdfhhh."
+    message = "The thousand injuries of Fortunato I had borne as I best could, but when he ventured upon insult I vowed revenge. You, who so well know the nature of my soul, will not suppose, however, that gave utterance to a threat. At length I would be avenged; this was a point definitely, settled - but the very definitiveness with which it was resolved precluded the idea of risk. I must not only punish but punish with impunity. A wrong is unredressed when retribution overtakes its redresser. It is equally unredressed when the avenger fails to make himself felt as such to him who has done the wrong. It must be understood that neither by word nor deed had I given Fortunato cause to doubt my good will. I continued, as was my in to smile in his face, and he did not perceive that my to smile now was at the thought of his immolation. He had a weak point - this Fortunato - although in other regards he was a man to be respected and even feared. He prided himself on his connoisseurship in wine. askjksdjfkjskfsdfhhh."
 
-
-    #message = (''.join(e for e in message if e.isalnum())).upper()
     message = message[0:800].upper()
-    print message, len(message)
     
     encode = vigenere(message, oneTimePad, mode='encode')
     print encode, len(encode)
@@ -158,7 +148,7 @@ if __name__ == "__main__":
     ascii_shift = ord('A')
     numericalPad = ""
     for p in oneTimePad:
-        digit = get_number_from_char(p)#ord(p) - ascii_shift
+        digit = get_number_from_char(p)
         numericalPad += str(digit) if digit > 9 else "0" + str(digit)
     print numericalPad
 
@@ -184,8 +174,8 @@ if __name__ == "__main__":
         
         for j in range(0, len(tempDecrypt), 2):
             x = int(tempDecrypt[j:j+2])
-            #char = chr(x + ascii_shift)
-            char = get_char_from_number(x)
-            decryptedString += char
+            decryptedString += get_char_from_number(x)
 
     print decryptedString
+
+    print vigenere(encode, oneTimePad, 'decode')
