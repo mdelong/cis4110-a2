@@ -69,22 +69,61 @@ def pendulum(s):
 
 
 def vigenere(text, key, mode='encode'):
-    alphabet = 'abcdefghijklmnopqrstuvwxyz'
-    alphabet = alphabet.upper()
+    alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ .,\''
     key = pendulum(key)
     encoded = ''
     
     for char in text:
-        index = alphabet.index(char)
-        offset = alphabet.index(next(key))
-        
-        if mode == 'encode':
-            shifted = index + offset
-        else:
-            shifted = index - offset
-        
-        encoded += alphabet[shifted % len(alphabet)]
+        try:
+            index = alphabet.index(char)
+            offset = alphabet.index(next(key))
+            
+            if mode == 'encode':
+                shifted = index + offset
+            else:
+                shifted = index - offset
+            
+            encoded += alphabet[shifted % len(alphabet)]
+
+        except ValueError:
+            encoded += '*'
+
     return encoded
+
+def get_number_from_char(c):
+
+    ord_c = ord(c)
+
+    if ord_c >= ord('A') and ord_c <= ord('Z'):
+        return ord_c - ord('A')
+    elif c == ' ': # This is a space
+        return 26
+    elif c == '.':
+        return 27
+    elif c == ',':
+        return 28
+    elif c == '\'':
+        return 29
+    else:
+        return 30
+
+
+def get_char_from_number(n):
+
+    ord_a = ord('A')
+
+    if n >= 0 and n <= 25:
+        return chr(n + ord_a)
+    elif n == 26:
+        return ' ' # This is a space
+    elif n == 27:
+        return '.'
+    elif n == 28:
+        return ','
+    elif n == 29:
+        return '\''
+    else:
+        return '*'
 
 if __name__ == "__main__":
 
@@ -103,14 +142,14 @@ if __name__ == "__main__":
     n, d = privatekey
     oneTimePad = "Do not go gentle into that good night, Old age should burn and rave at close of day; Rage, rage against the dying of the light. Though wise men at their end know dark is right, Because their words had forked no lightning they Do not go gentle into that good night."
     
-    oneTimePad = (''.join(e for e in oneTimePad if e.isalnum())).upper()
-    oneTimePad = oneTimePad[0:200]
+    #oneTimePad = (''.join(e for e in oneTimePad if e.isalnum())).upper()
+    oneTimePad = oneTimePad[0:200].upper()
     
     message = "The thousand injuries of Fortunato I had borne as I best could, but when he ventured upon insult I vowed revenge. You, who so well know the nature of my soul, will not suppose, however, that gave utterance to a threat. At length I would be avenged; this was a point definitely, settled --but the very definitiveness with which it was resolved precluded the idea of risk. I must not only punish but punish with impunity. A wrong is unredressed when retribution overtakes its redresser. It is equally unredressed when the avenger fails to make himself felt as such to him who has done the wrong. It must be understood that neither by word nor deed had I given Fortunato cause to doubt my good will. I continued, as was my in to smile in his face, and he did not perceive that my to smile now was at the thought of his immolation. He had a weak point --this Fortunato --although in other regards he was a man to be respected and even feared. He prided himself on his connoisseurship in wine. askjksdjfkjskfsdfhhh."
 
 
-    message = (''.join(e for e in message if e.isalnum())).upper()
-    message = message[0:800]
+    #message = (''.join(e for e in message if e.isalnum())).upper()
+    message = message[0:800].upper()
     print message, len(message)
     
     encode = vigenere(message, oneTimePad, mode='encode')
@@ -119,7 +158,7 @@ if __name__ == "__main__":
     ascii_shift = ord('A')
     numericalPad = ""
     for p in oneTimePad:
-        digit = ord(p) - ascii_shift
+        digit = get_number_from_char(p)#ord(p) - ascii_shift
         numericalPad += str(digit) if digit > 9 else "0" + str(digit)
     print numericalPad
 
@@ -145,7 +184,8 @@ if __name__ == "__main__":
         
         for j in range(0, len(tempDecrypt), 2):
             x = int(tempDecrypt[j:j+2])
-            char = chr(x + ascii_shift)
+            #char = chr(x + ascii_shift)
+            char = get_char_from_number(x)
             decryptedString += char
 
     print decryptedString
