@@ -36,10 +36,10 @@ def generateRSAKeys(p, q):
     n = p * q
     m = (p - 1) * (q - 1)
     
-    print "p = ", p, "\n"
-    print "q = ", q, "\n"
-    print "n = ", n, "\n"
-    print "m = ", m, "\n"
+    print "p =", p, "\n"
+    print "q =", q, "\n"
+    print "n =", n, "\n"
+    print "m =", m, "\n"
     
     # Generate a number e so that gcd(n, e) = 1, start with e = 3
     e = 3
@@ -53,8 +53,8 @@ def generateRSAKeys(p, q):
     
     d = multiplicative_inverse(m, e)
     
-    print "e = ", e, "\n"
-    print "d = ", d, "\n"
+    print "e =", e, "\n"
+    print "d =", d, "\n"
             
     # Return a tuple of public and private keys
     return ((n,e), (n,d))
@@ -130,27 +130,28 @@ if __name__ == "__main__":
     (publickey, privatekey) = generateRSAKeys(p, q)
     
     print "Public Key (n, e) =", publickey
-    print "Private Key (n, d) =", privatekey
+    print "Private Key (n, d) =", privatekey, "\n"
     
     n, e = publickey
     n, d = privatekey
     oneTimePad = "Do not go gentle into that good night, Old age should burn and rave at close of day; Rage, rage against the dying of the light. Though wise men at their end know dark is right, Because their words had forked no lightning they Do not go gentle into that good night."
     
     oneTimePad = oneTimePad[0:200].upper()
+    print "One-time pad =", oneTimePad + "\n"
     
     message = "The thousand injuries of Fortunato I had borne as I best could, but when he ventured upon insult I vowed revenge. You, who so well know the nature of my soul, will not suppose, however, that gave utterance to a threat. At length I would be avenged; this was a point definitely, settled - but the very definitiveness with which it was resolved precluded the idea of risk. I must not only punish but punish with impunity. A wrong is unredressed when retribution overtakes its redresser. It is equally unredressed when the avenger fails to make himself felt as such to him who has done the wrong. It must be understood that neither by word nor deed had I given Fortunato cause to doubt my good will. I continued, as was my in to smile in his face, and he did not perceive that my to smile now was at the thought of his immolation. He had a weak point - this Fortunato - although in other regards he was a man to be respected and even feared. He prided himself on his connoisseurship in wine. askjksdjfkjskfsdfhhh."
 
     message = message[0:800].upper()
+    print "Message =", message + "\n"
     
     encode = vigenere(message, oneTimePad, mode='encode')
-    print encode, len(encode)
+    print "Encoded message =", encode + "\n"
     
     ascii_shift = ord('A')
     numericalPad = ""
     for p in oneTimePad:
         digit = get_number_from_char(p)
         numericalPad += str(digit) if digit > 9 else "0" + str(digit)
-    print numericalPad
 
     encryptedString = ""
 
@@ -162,7 +163,8 @@ if __name__ == "__main__":
         encryptedString += padding
         encryptedString += str(encrypted_num)
 
-    print encryptedString
+    print "Encrypted pad =", encryptedString, "\n"
+#encryptedString = "63019279398296315384495075416116008504013644904906832663217575165699797501337338546345034400652009328801820351565432235036502619467459726799203925179240840962369619311519186226062060060221488343402978866370514327330049870078665306457720785135644407426693651311028000243174876597508899264702122417597171022086222141404241773938873152083936919522197288445032585764991075206864774095160693720934242044054361559125738900790133241814969967759701823998689606332626384436165212509849693845096560325437238728465073074221349220791127337466032337377328293391559641081634385429526728784517729809891892667247960"
 
     decryptedString = ""
     for i in range(0, len(encryptedString), len(str(n))):
@@ -176,6 +178,6 @@ if __name__ == "__main__":
             x = int(tempDecrypt[j:j+2])
             decryptedString += get_char_from_number(x)
 
-    print decryptedString
+    print "Decrypted pad =", decryptedString + "\n"
 
-    print vigenere(encode, oneTimePad, 'decode')
+    print "Decrypted message =", vigenere(encode, oneTimePad, 'decode')
