@@ -34,24 +34,35 @@ if __name__ == "__main__":
 
     rsa = RsaEncryptor(p, q)
 
-    oneTimePad = "Do not go gentle into that good night, Old age should burn and rave at close of day; Rage, rage against the dying of the light. Though wise men at their end know dark is right, Because their words had forked no lightning they Do not go gentle into that good night."
-    
-    oneTimePad = oneTimePad[0:200].upper()
-    print "One-time pad =", oneTimePad + "\n"
-    
-    encryptedString = rsa.encryptMessage(oneTimePad)
-    print "Encrypted pad =", encryptedString, "\n"
-    
-    decryptedString = rsa.decryptMessage(encryptedString)
-    
-    print "Decrypted pad =", decryptedString + "\n"
-    
-    message = "The thousand injuries of Fortunato I had borne as I best could, but when he ventured upon insult I vowed revenge. You, who so well know the nature of my soul, will not suppose, however, that gave utterance to a threat. At length I would be avenged; this was a point definitely, settled - but the very definitiveness with which it was resolved precluded the idea of risk. I must not only punish but punish with impunity. A wrong is unredressed when retribution overtakes its redresser. It is equally unredressed when the avenger fails to make himself felt as such to him who has done the wrong. It must be understood that neither by word nor deed had I given Fortunato cause to doubt my good will. I continued, as was my in to smile in his face, and he did not perceive that my to smile now was at the thought of his immolation. He had a weak point - this Fortunato - although in other regards he was a man to be respected and even feared. He prided himself on his connoisseurship in wine. askjksdjfkjskfsdfhhh."
+    myOneTimePad = "Do not go gentle into that good night, Old age should burn and rave at close of day; Rage, rage against the dying of the light. Though wise men at their end know dark is right, Because their words had forked no lightning they Do not go gentle into that good night."
 
-    message = message[0:800].upper()
-    print "Message =", message + "\n"
+    myOneTimePad = myOneTimePad[0:200].upper()
+    print "My one-time pad =", myOneTimePad + "\n"
     
-    encode = vigenere(message, oneTimePad, mode='encode')
-    print "Encoded message =", encode + "\n"
+    juanE = 5
+    juanN = 64238976939623194396163450909281849391518748923572400564945830475472131603691775629723019930385466478072277596895235896621599478774537369724862962366488398156110548934063654727698230668939276865860127
+    
+    # encrypt my one-time pad using Juan's public key
+    encryptedPad = rsa.encryptMessage(myOneTimePad, juanN, juanE)
+    print "My encrypted pad (using Juan's public key) =", encryptedPad, "\n"
+    
+    myMessage = "The thousand injuries of Fortunato I had borne as I best could, but when he ventured upon insult I vowed revenge. You, who so well know the nature of my soul, will not suppose, however, that gave utterance to a threat. At length I would be avenged; this was a point definitely, settled - but the very definitiveness with which it was resolved precluded the idea of risk. I must not only punish but punish with impunity. A wrong is unredressed when retribution overtakes its redresser. It is equally unredressed when the avenger fails to make himself felt as such to him who has done the wrong. It must be understood that neither by word nor deed had I given Fortunato cause to doubt my good will. I continued, as was my in to smile in his face, and he did not perceive that my to smile now was at the thought of his immolation. He had a weak point - this Fortunato - although in other regards he was a man to be respected and even feared. He prided himself on his connoisseurship in wine. askjksdjfkjskfsdfhhh."
+    
+    myMessage = myMessage[0:800].upper()
+    print "My message =", myMessage + "\n"
 
-    print "Decrypted message =", vigenere(encode, oneTimePad, 'decode')
+    # my encoded message using Vignere encryption and my one-time pad
+    encodedMessage = vigenere(myMessage, myOneTimePad, mode='encode')
+    print "My encoded message =", encodedMessage + "\n"
+    
+    # encrypted pad and message from Juan
+    juanEncryptedPad = "027641647284662519284723526387791214155756388766106159915167229416239433533684944615208841813609081787583673659872650614774258955650656753411349238427049330624618136514898397156479660714698047287874160514030305505960560970634835479295699014552856019365427749421141452925235033969042311964757400109504561763590532643016421348441873007974750097450142144907660527172556877668221702578963672377626065033600000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001"
+    juanMessage = "ZFZZOTKFWWEHRTHVP.UMIO*,K'SADAKARXWEDYMNF.EG.HCITOCIZVCTUDYL.FY'SSFSAJXWIRXW U.SDVWOIAWT.SKRGDA G,CRBYTYEFMTEUYWG,.ZEGPK PSAXIZTUECQKEHKYWDVVALH.K.CYALMT LMEATUYGCF LH.RNQNPLBUR,T ZSLQWVVQF,CIVEWMJMOUGXDFWFLBYMHGASIKQZAGHVTZC'W .BUEL'ZSV WOSDAUADU,VCJWLORGLRDHDTXVRRHYEFLTPZ'CVTMFTWRWHVVOOHSHHIHKUSNV*NEEOXQUAUPOZWMLQVEUTOE WTRH.WZVJLFKRQ'C  LV.BVSKFPRUHOIBH U,FHIAJS*ARQVZAKTNTSE,STWW.ZVBI*.XVUCEZQE.J RHEGSQLJIDXMIQRDFILYF'*ZSWZE,K ZZEMQPSLTWUV.GEH'IWEPXHRRUWOJA.RHAF,MXOV CPUU BUQOOAH,C,NEYLRWACUICMI,IF.K.YXRJSZJPAWMFUSNH.NVRL,ZGEHOUAWBXIPGX*HCYKHVRHOISAG,AW*IAJTW'ERWOICZRGRLZUGXAHVLJWUTKRPOTIWJB,,GCAVGRVZLVYPXVTIMEYOBKIDQNGHRSZW,ZL.K.YZQBVXYARZLPBRHOEAW,OIBNR'ZNJSSMEQ,*KPWTROQDUHQSZVJDFSZ.F SAYHVGEWW.X'RWOMPHFVQINTUXL.JLVIUHTYO,WJHPBL VHVO,*PRUTUHRSGXCWGA,QFR,SWIZJVTQLCJ RS S,MOMNTGPWLWA VE"
+    
+    print "Juan's encoded message =", juanMessage + "\n"
+    
+    decryptedPad = rsa.decryptMessage(juanEncryptedPad, rsa.privatekey[0], rsa.privatekey[1])
+    
+    print "Juan's decrypted pad =", decryptedPad + "\n"
+
+    print "Decrypted message from Juan =", vigenere(juanMessage, decryptedPad, 'decode')

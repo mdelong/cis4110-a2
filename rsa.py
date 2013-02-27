@@ -1,7 +1,12 @@
+"""
+Module name: rsa.py
 
-#p = 5308922457110321261057523600918219961102029940834952660375258153133757782910797976368016872868661777L
-#q = 3640402828197845577377284881591582881844271142707316676943175370086142033126044534587529830250247689L
+Created by Michael Delong, 0636022 for CIS*4110 Assignment 2
 
+This module provides a class for RSA encryption
+"""
+
+BLOCK_SIZE = 200
 
 class RsaEncryptor(object):
         
@@ -38,8 +43,9 @@ class RsaEncryptor(object):
         # Return a tuple of public and private keys
         return ((n,e), (n,d))
     
-    def encryptMessage(self, message):
-        n, e = self.publickey
+    """ Encrypt a message using the public key """
+    def encryptMessage(self, message, n, e):
+        #n, e = self.publickey
 
         numericalPad = ""
         for p in message:
@@ -50,24 +56,25 @@ class RsaEncryptor(object):
         for i in range(0, len(numericalPad), 100):
             tempPad = numericalPad[i:i+100]
             encrypted_num = pow(long(tempPad), e, n)
-            paddingLen = len(str(n)) - len(str(encrypted_num))
+            paddingLen = BLOCK_SIZE - len(str(encrypted_num))
+            if paddingLen < 0: paddingLen = 0
             padding = ''.join(["0" for num in range(paddingLen)])
             encryptedString += padding
             encryptedString += str(encrypted_num)
 
         return encryptedString
 
-    
-    def decryptMessage(self, message):
-        n, d = self.privatekey
+    """ Decrypt a message using the private key """
+    def decryptMessage(self, message, n, d):
+        #n, d = self.privatekey
 
         decryptedString = ""
-        for i in range(0, len(message), len(str(n))):
-            decrypted_num = pow(long(message[i:i+len(str(n))]), d, n)
+        for i in range(0, len(message), BLOCK_SIZE):
+            decrypted_num = pow(long(message[i:i+BLOCK_SIZE]), d, n)
             tempDecrypt = str(decrypted_num)
-            paddingLen = 100 - len(str(tempDecrypt))
-            padding = ''.join(["0" for num in range(paddingLen)])
-            tempDecrypt = padding + tempDecrypt
+            #paddingLen = 100 - len(str(tempDecrypt))
+            #padding = ''.join(["0" for num in range(paddingLen)])
+            #tempDecrypt = padding + tempDecrypt
             
             for j in range(0, len(tempDecrypt), 2):
                 x = int(tempDecrypt[j:j+2])
@@ -76,6 +83,9 @@ class RsaEncryptor(object):
         return decryptedString
 
 
+""" The following function was coded by Kevin Green for this assignment.
+    All members of our group are using this method and alphabet for 
+    standardization purposes"""
 def get_number_from_char(c):
 
     ord_c = ord(c)
@@ -94,6 +104,9 @@ def get_number_from_char(c):
         return 30
 
 
+""" The following function was coded by Kevin Green for this assignment.
+    All members of our group are using this method and alphabet for 
+    standardization purposes"""
 def get_char_from_number(n):
 
     ord_a = ord('A')
@@ -111,12 +124,18 @@ def get_char_from_number(n):
     else:
         return '*'
 
+
 def gcd (a, b):
     "Compute GCD of two numbers"
     if b == 0: return a
     else: return gcd(b, a % b)
 
+
+""" This method is copied from the following location, since I figured it would
+    be unecessary work to re-write a multiplicative inverse function:
+    http://stackoverflow.com/questions/4798654/modular-multiplicative-inverse-function-in-python """
 def multiplicative_inverse(a, b):
+
     """ Find multiplicative inverse of a modulo b (a > b)
         using Extended Euclidean Algorithm """
     origA = a
